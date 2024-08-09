@@ -1,0 +1,18 @@
+# 09-08-2024 Calculate COP based on compressor power
+- platform: template
+  sensors:
+    heatpump_cop:
+      friendly_name: "Heatpump COP calculation compressor"
+      unit_of_measurement: "x"
+      value_template: >
+        {% set power_value = states('sensor.compr_in_power_43141') | float(default=0) %}
+        {% if power_value <= 0.15 %}
+          0
+        {% else %}
+          {% set heat_flow_value = states('sensor.bt2_supply_temp_s1_40008') | float(default=0) %}
+          {% set return_flow_value = states('sensor.eb100_ep14_bt3_return_temp_40012') | float(default=0) %}
+          {% set pump_speed = states('sensor.supply_pump_speed_ep14_43437') | float(default=0) %}
+          {% set thermal_value_linear = ((pump_speed/100*0.25+0.04)*4.18*(heat_flow_value - return_flow_value)) %} 
+          {% set COP = (thermal_value_linear / power_value) | round(2) %}
+          {{ COP }}
+        {% endif %}

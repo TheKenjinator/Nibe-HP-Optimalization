@@ -1,2 +1,2 @@
 # Nibe-HP-Optimalization
-Optimising the performance of the heatpump using Home Assistant
+Optimising the performance of the heatpump with Home Assistant
